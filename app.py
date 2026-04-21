@@ -163,14 +163,11 @@ st.markdown("""
     ::-webkit-scrollbar-track { background: #FDF8F0; }
     ::-webkit-scrollbar-thumb { background: #FF6F00; border-radius: 8px; }
     .stAlert { border-radius: 12px !important; }
-st.markdown("""
-<style>
-    ...
-    .stAlert { border-radius: 12px !important; }
 
     /* ==================== MOBILE RESPONSIVE FIX ==================== */
     @media (max-width: 768px) {
 
+        /* Main container padding */
         .block-container {
             padding-left: 0.7rem !important;
             padding-right: 0.7rem !important;
@@ -178,16 +175,19 @@ st.markdown("""
             max-width: 100% !important;
         }
 
+        /* Stack all columns vertically on mobile */
         [data-testid="stHorizontalBlock"] {
             flex-wrap: wrap !important;
             gap: 0.5rem !important;
         }
 
+        /* Each column takes full width */
         [data-testid="column"] {
             min-width: 100% !important;
             flex: 1 1 100% !important;
         }
 
+        /* Tabs become horizontally scrollable */
         .stTabs [data-baseweb="tab-list"] {
             justify-content: flex-start !important;
             flex-wrap: nowrap !important;
@@ -198,6 +198,7 @@ st.markdown("""
             gap: 6px !important;
         }
 
+        /* Smaller tab buttons on mobile */
         .stTabs [data-baseweb="tab"] {
             min-width: auto !important;
             padding: 8px 12px !important;
@@ -205,12 +206,14 @@ st.markdown("""
             border-radius: 10px !important;
         }
 
+        /* Tabs not sticky on mobile */
         .stTabs {
             position: static !important;
             top: auto !important;
             padding: 10px 0 12px 0 !important;
         }
 
+        /* Smaller headings on mobile */
         h1 {
             font-size: 24px !important;
             line-height: 1.3 !important;
@@ -224,14 +227,21 @@ st.markdown("""
             font-size: 17px !important;
         }
 
+        h4 {
+            font-size: 15px !important;
+        }
+
+        /* Tables scroll horizontally */
         [data-testid="stDataFrame"] {
             overflow-x: auto !important;
         }
 
+        /* Wider sidebar on mobile when opened */
         section[data-testid="stSidebar"] {
             width: 85vw !important;
         }
 
+        /* Full width buttons on mobile */
         .stButton > button,
         .stDownloadButton > button {
             width: 100% !important;
@@ -239,24 +249,58 @@ st.markdown("""
             padding: 12px 14px !important;
         }
 
+        /* Full width inputs */
         .stSelectbox, .stMultiSelect, .stTextInput, .stNumberInput {
             width: 100% !important;
         }
 
+        /* Charts fit mobile width */
         .js-plotly-plot, .plotly, .stPlotlyChart {
             width: 100% !important;
         }
 
+        /* Images responsive */
         img {
             max-width: 100% !important;
             height: auto !important;
         }
+
+        /* KPI cards spacing on mobile */
+        div[data-testid="stMarkdownContainer"] > div {
+            margin-bottom: 6px !important;
+        }
+
+        /* Info cards padding */
+        .stAlert {
+            padding: 10px !important;
+            font-size: 12px !important;
+        }
+    }
+
+    /* ==================== TABLET FIX (768px - 1024px) ==================== */
+    @media (min-width: 769px) and (max-width: 1024px) {
+
+        [data-testid="column"] {
+            min-width: 48% !important;
+            flex: 1 1 48% !important;
+        }
+
+        .stTabs [data-baseweb="tab"] {
+            padding: 10px 16px !important;
+            font-size: 12px !important;
+            min-width: 100px !important;
+        }
+
+        h1 {
+            font-size: 28px !important;
+        }
+
+        h2 {
+            font-size: 22px !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
-</style>
-""", unsafe_allow_html=True)
-
 # ==================== SESSION STATE ====================
 def init_session_state():
     defaults = {
