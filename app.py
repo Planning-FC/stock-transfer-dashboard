@@ -163,7 +163,7 @@ st.markdown("""
     ::-webkit-scrollbar-track { background: #FDF8F0; }
     ::-webkit-scrollbar-thumb { background: #FF6F00; border-radius: 8px; }
     .stAlert { border-radius: 12px !important; }
-    st.markdown("""
+st.markdown("""
 <style>
     ...
     .stAlert { border-radius: 12px !important; }
