@@ -2928,13 +2928,13 @@ def save_sample_to_temp(horizon=8, history=12):
     })
     tmp = os.path.join(TEMP_DIR,'forecastapp_sample.xlsx')
     with pd.ExcelWriter(tmp,engine='openpyxl') as w:
-        raw_df.to_excel(w,'Raw_Input',index=False)
-        params_df.to_excel(w,'Forecast_Parameters',index=False)
-        fr_df.to_excel(w,'Fill_Rate',index=False)
-        st_df.to_excel(w,'Sale_Through',index=False)
-        gr_df.to_excel(w,'Growth',index=False)
-        sm_df.to_excel(w,'SKU_Master',index=False)
-        pr_df.to_excel(w,'Promo_Calendar',index=False)
+        raw_df.to_excel(w, sheet_name='Raw_Input',index=False)
+        params_df.to_excel(w, sheet_name='Forecast_Parameters',index=False)
+        fr_df.to_excel(w, sheet_name='Fill_Rate',index=False)
+        st_df.to_excel(w, sheet_name='Sale_Through',index=False)
+        gr_df.to_excel(w, sheet_name='Growth',index=False)
+        sm_df.to_excel(w, sheet_name='SKU_Master',index=False)
+        pr_df.to_excel(w, sheet_name='Promo_Calendar',index=False)
     return tmp, raw_df
 
 
@@ -6615,7 +6615,7 @@ else:
                     buf_dl = io.BytesIO()
                     with pd.ExcelWriter(
                             buf_dl,engine='openpyxl') as w:
-                        filt.to_excel(w,'Results',index=False)
+                        filt.to_excel(w, sheet_name='Results',index=False)
                         try:
                             if 'Category' in filt.columns:
                                 cs = filt.groupby('Category')\
@@ -6625,7 +6625,7 @@ else:
                                     'SOH_in_Store':'sum',
                                 }).rename(columns={
                                     'Sku_Code':'SKU_Count'})
-                                cs.to_excel(w,'Category_Summary')
+                                cs.to_excel(w, sheet_name='Category_Summary')
                         except: pass
                         try:
                             if 'Brand' in filt.columns:
@@ -6635,7 +6635,7 @@ else:
                                     'Replen_Qty':'sum',
                                 }).rename(columns={
                                     'Sku_Code':'SKU_Count'})
-                                bs.to_excel(w,'Brand_Summary')
+                                bs.to_excel(w, sheet_name='Brand_Summary')
                         except: pass
                     st.download_button(
                         "📥 Current Results (Excel+Summaries)",
