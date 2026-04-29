@@ -1,12 +1,11 @@
 streamlit
-pandas
+pandas==2.2.3
 numpy
 plotly
-openpyxl
+openpyxl==3.1.5
 prophet
 xgboost
 lightgbm
 catboost
 statsmodels
-openpyxl
 scikit-learn
