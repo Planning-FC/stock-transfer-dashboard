@@ -10,4 +10,3 @@ catboost
 statsmodels
 openpyxl
 scikit-learn
-pywin32
