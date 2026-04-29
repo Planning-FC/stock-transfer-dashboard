@@ -2902,13 +2902,13 @@ def build_template():
      gr_df,sm_df,pr_df) = generate_sample_data()
     buf = io.BytesIO()
     with pd.ExcelWriter(buf,engine='openpyxl') as w:
-        raw_df.head(5).to_excel(w,'Raw_Input',index=False)
-        params_df.to_excel(w,'Forecast_Parameters',index=False)
-        fr_df.head(5).to_excel(w,'Fill_Rate',index=False)
-        st_df.head(5).to_excel(w,'Sale_Through',index=False)
-        gr_df.head(5).to_excel(w,'Growth',index=False)
-        sm_df.head(5).to_excel(w,'SKU_Master',index=False)
-        pr_df.to_excel(w,'Promo_Calendar',index=False)
+        raw_df.head(5).to_excel(w, sheet_name='Raw_Input', index=False)
+        params_df.to_excel(w, sheet_name='Forecast_Parameters', index=False)
+        fr_df.head(5).to_excel(w, sheet_name='Fill_Rate', index=False)
+        st_df.head(5).to_excel(w, sheet_name='Sale_Through', index=False)
+        gr_df.head(5).to_excel(w, sheet_name='Growth', index=False)
+        sm_df.head(5).to_excel(w, sheet_name='Summary', index=False)
+        pr_df.head(5).to_excel(w, sheet_name='Promo', index=False)
     return buf.getvalue()
 
 
