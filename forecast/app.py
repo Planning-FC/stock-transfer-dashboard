@@ -2788,7 +2788,7 @@ def generate_sample_data():
             po  = random.randint(0,150)
             lt  = random.choice([5,7,10])
             cp  = random.choice([6,12,24])
-            for w in range(16):
+            for w in range(12):
                 wdate  = base_date+pd.Timedelta(weeks=w)
                 trend  = 1+w*0.015
                 season = 1+0.15*np.sin(w*np.pi/6)
