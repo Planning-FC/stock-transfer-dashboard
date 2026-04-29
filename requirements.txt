@@ -3,3 +3,11 @@ pandas
 numpy
 plotly
 openpyxl
+prophet
+xgboost
+lightgbm
+catboost
+statsmodels
+openpyxl
+scikit-learn
+pywin32
