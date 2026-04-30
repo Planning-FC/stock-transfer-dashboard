@@ -1,4 +1,3 @@
-
 # =============================================================================
 # ForecastApp.py - STANDALONE Advanced Forecast & Replenishment
 # Path: C:\FC\ecom\advanced FC\ForecastApp.py
@@ -2898,17 +2897,126 @@ def generate_sample_data():
 # =============================================================================
 
 def build_template():
-    (raw_df,params_df,fr_df,st_df,
-     gr_df,sm_df,pr_df) = generate_sample_data()
+    """Build FC.xlsx template with hardcoded sample data"""
     buf = io.BytesIO()
-    with pd.ExcelWriter(buf,engine='openpyxl') as w:
-        raw_df.head(5).to_excel(w, sheet_name='Raw_Input', index=False)
-        params_df.to_excel(w, sheet_name='Forecast_Parameters', index=False)
-        fr_df.head(5).to_excel(w, sheet_name='Fill_Rate', index=False)
-        st_df.head(5).to_excel(w, sheet_name='Sale_Through', index=False)
-        gr_df.head(5).to_excel(w, sheet_name='Growth', index=False)
-        sm_df.head(5).to_excel(w, sheet_name='Summary', index=False)
-        pr_df.head(5).to_excel(w, sheet_name='Promo', index=False)
+    with pd.ExcelWriter(buf, engine='openpyxl') as w:
+
+        # Sheet 1: Raw_Input
+        pd.DataFrame({
+            'Sku_Code':         ['SKU001','SKU001','SKU002','SKU002'],
+            'Sku_Name':         ['Nestle Pure Life 6x500ml']*2 +
+                                ['Masafi 6x500ml Pack']*2,
+            'Brand':            ['Nestle']*2+['Masafi']*2,
+            'Category':         ['Beverages']*4,
+            'Sub_Category':     ['Water']*4,
+            'Vendor_1':         ['Nestle Distribution LLC']*2 +
+                                ['Masafi Trading LLC']*2,
+            'Darkstore_Name':   ['DS_JLT','DS_MARINA',
+                                 'DS_JLT','DS_MARINA'],
+            'SOH_in_Store':     [100,80,150,120],
+            'SOH_in_Warehouse': [1000,1000,2000,2000],
+            'Open_PO':          [50,30,100,80],
+            'Price':            [4.50,4.50,4.20,4.20],
+            'Week':             ['2026-01-01','2026-01-01',
+                                 '2026-01-01','2026-01-01'],
+            'Sold_Qty':         [120,100,90,80],
+            'Sold_Value':       [540,450,378,336],
+            'Lead_Time':        [7,7,7,7],
+            'Case_Pack':        [12,12,12,12],
+            'Shelf_Life':       [180,180,180,180],
+            'CBM_Per_Unit':     [0.002,0.002,0.002,0.002],
+        }).to_excel(
+            excel_writer=w,
+            sheet_name='Raw_Input',
+            index=False
+        )
+
+        # Sheet 2: Forecast_Parameters
+        pd.DataFrame({
+            'Parameter': ['Forecast_Horizon',
+                          'Sales_Week_to_Show'],
+            'Value':     [8, 12]
+        }).to_excel(
+            excel_writer=w,
+            sheet_name='Forecast_Parameters',
+            index=False
+        )
+
+        # Sheet 3: Fill_Rate
+        pd.DataFrame({
+            'Sku_Code':       ['SKU001','SKU001',
+                               'SKU002','SKU002'],
+            'Darkstore_Name': ['DS_JLT','DS_MARINA',
+                               'DS_JLT','DS_MARINA'],
+            'Fill_Rate':      [95,90,85,88],
+            'Buffer_Days':    [7,7,7,7],
+        }).to_excel(
+            excel_writer=w,
+            sheet_name='Fill_Rate',
+            index=False
+        )
+
+        # Sheet 4: Sale_Through
+        pd.DataFrame({
+            'Sku_Code':       ['SKU001','SKU001',
+                               'SKU002','SKU002'],
+            'Darkstore_Name': ['DS_JLT','DS_MARINA',
+                               'DS_JLT','DS_MARINA'],
+            'Sale_Thrugh':    [85,80,75,78],
+            'Buffer_Days':    [7,7,7,7],
+        }).to_excel(
+            excel_writer=w,
+            sheet_name='Sale_Through',
+            index=False
+        )
+
+        # Sheet 5: Growth
+        pd.DataFrame({
+            'Sku_Code':       ['SKU001','SKU001',
+                               'SKU002','SKU002'],
+            'Category':       ['Beverages']*4,
+            'Darkstore_Name': ['DS_JLT','DS_MARINA',
+                               'DS_JLT','DS_MARINA'],
+            'Growth_Week1':   [0.05,0.03,0.02,0.04],
+            'Growth_Week2':   [0.05,0.03,0.02,0.04],
+        }).to_excel(
+            excel_writer=w,
+            sheet_name='Growth',
+            index=False
+        )
+
+        # Sheet 6: SKU_Master
+        pd.DataFrame({
+            'SKU_Code':        ['SKU001','SKU002'],
+            'SKU_Name':        ['Nestle Pure Life 6x500ml',
+                                'Masafi 6x500ml Pack'],
+            'Brand':           ['Nestle','Masafi'],
+            'Category':        ['Beverages','Beverages'],
+            'Sub_Category':    ['Water','Water'],
+            'Base_Price':      [4.50,4.20],
+            'CBM_Per_Unit':    [0.002,0.002],
+            'Shelf_Life_Days': [180,180],
+        }).to_excel(
+            excel_writer=w,
+            sheet_name='SKU_Master',
+            index=False
+        )
+
+        # Sheet 7: Promo_Calendar
+        pd.DataFrame({
+            'Promo_ID':       [1,2],
+            'Darkstore_Name': ['DS_JLT','DS_MARINA'],
+            'Sku_Code':       ['SKU001','SKU001'],
+            'Start_Date':     ['2026-01-15','2026-01-15'],
+            'End_Date':       ['2026-01-20','2026-01-20'],
+            'Regular_Price':  [4.50,4.50],
+            'Promo_Price':    [3.15,3.38],
+        }).to_excel(
+            excel_writer=w,
+            sheet_name='Promo_Calendar',
+            index=False
+        )
+
     return buf.getvalue()
 
 
@@ -2922,19 +3030,42 @@ def save_upload_to_temp(uploaded_file):
 def save_sample_to_temp(horizon=8, history=12):
     (raw_df,params_df,fr_df,st_df,
      gr_df,sm_df,pr_df) = generate_sample_data()
+
     params_df = pd.DataFrame({
         'Parameter': ['Forecast_Horizon','Sales_Week_to_Show'],
-        'Value':     [horizon,history]
+        'Value':     [horizon, history]
     })
-    tmp = os.path.join(TEMP_DIR,'forecastapp_sample.xlsx')
-    with pd.ExcelWriter(tmp,engine='openpyxl') as w:
-        raw_df.to_excel(w, sheet_name='Raw_Input',index=False)
-        params_df.to_excel(w, sheet_name='Forecast_Parameters',index=False)
-        fr_df.to_excel(w, sheet_name='Fill_Rate',index=False)
-        st_df.to_excel(w, sheet_name='Sale_Through',index=False)
-        gr_df.to_excel(w, sheet_name='Growth',index=False)
-        sm_df.to_excel(w, sheet_name='SKU_Master',index=False)
-        pr_df.to_excel(w, sheet_name='Promo_Calendar',index=False)
+
+    tmp = os.path.join(TEMP_DIR,'engine3_sample.xlsx')
+    with pd.ExcelWriter(tmp, engine='openpyxl') as w:
+        raw_df.to_excel(
+            excel_writer=w,
+            sheet_name='Raw_Input',
+            index=False)
+        params_df.to_excel(
+            excel_writer=w,
+            sheet_name='Forecast_Parameters',
+            index=False)
+        fr_df.to_excel(
+            excel_writer=w,
+            sheet_name='Fill_Rate',
+            index=False)
+        st_df.to_excel(
+            excel_writer=w,
+            sheet_name='Sale_Through',
+            index=False)
+        gr_df.to_excel(
+            excel_writer=w,
+            sheet_name='Growth',
+            index=False)
+        sm_df.to_excel(
+            excel_writer=w,
+            sheet_name='SKU_Master',
+            index=False)
+        pr_df.to_excel(
+            excel_writer=w,
+            sheet_name='Promo_Calendar',
+            index=False)
     return tmp, raw_df
 
 
@@ -5710,30 +5841,52 @@ else:
                 "text/csv",use_container_width=True)
         with c2:
             buf2 = io.BytesIO()
-            with pd.ExcelWriter(buf2,engine='openpyxl') as w:
-                sku_r_disp.to_excel(
-                    w,'Replenishment',index=False)
-                try:
-                    if 'Category' in filt.columns \
-                       and len(cat_tbl_r)>0:
-                        cat_tbl_r.to_excel(
-                            w,'Category_Summary',index=True)
-                except: pass
-                try:
-                    if 'Brand' in filt.columns \
-                       and len(br_tbl_r)>0:
-                        br_tbl_r.to_excel(
-                            w,'Brand_Summary',index=True)
-                except: pass
-            st.download_button(
-                "📥 Download Excel (with summaries)",
-                buf2.getvalue(),
-                f"replen_{datetime.now().strftime('%Y%m%d')}.xlsx",
-                "application/vnd.openxmlformats-officedocument"
-                ".spreadsheetml.sheet",
-                use_container_width=True)
+            try:
+                with pd.ExcelWriter(buf2, engine='openpyxl') as w:
+                    if len(sku_r_disp) > 0:
+                        sku_r_disp.to_excel(
+                            excel_writer=w,
+                            sheet_name='Replenishment',
+                            index=False
+                        )
+                    else:
+                        pd.DataFrame(
+                            {'Info': ['No data']}
+                        ).to_excel(
+                            excel_writer=w,
+                            sheet_name='Replenishment',
+                            index=False
+                        )
 
-    # =========================================================
+                    try:
+                        if 'Category' in filt.columns and len(cat_tbl_r) > 0:
+                            cat_tbl_r.to_excel(
+                                excel_writer=w,
+                                sheet_name='Category_Summary',
+                                index=True
+                            )
+                    except:
+                        pass
+
+                    try:
+                        if 'Brand' in filt.columns and len(br_tbl_r) > 0:
+                            br_tbl_r.to_excel(
+                                excel_writer=w,
+                                sheet_name='Brand_Summary',
+                                index=True
+                            )
+                    except:
+                        pass
+
+                st.download_button(
+                    "📥 Download Excel (with summaries)",
+                    buf2.getvalue(),
+                    f"replen_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    use_container_width=True
+                )
+            except Exception as e:
+                st.warning(f"Excel export error: {e}")    # =========================================================
     # TAB 6 – TRENDS
     # =========================================================
     with tab6:
@@ -6615,7 +6768,7 @@ else:
                     buf_dl = io.BytesIO()
                     with pd.ExcelWriter(
                             buf_dl,engine='openpyxl') as w:
-                        filt.to_excel(w, sheet_name='Results',index=False)
+                        filt.to_excel(excel_writer=w, sheet_name='Results',index=False)
                         try:
                             if 'Category' in filt.columns:
                                 cs = filt.groupby('Category')\
@@ -6625,7 +6778,7 @@ else:
                                     'SOH_in_Store':'sum',
                                 }).rename(columns={
                                     'Sku_Code':'SKU_Count'})
-                                cs.to_excel(w, sheet_name='Category_Summary')
+                                cs.to_excel(excel_writer=w, sheet_name='Category_Summary')
                         except: pass
                         try:
                             if 'Brand' in filt.columns:
@@ -6635,7 +6788,7 @@ else:
                                     'Replen_Qty':'sum',
                                 }).rename(columns={
                                     'Sku_Code':'SKU_Count'})
-                                bs.to_excel(w, sheet_name='Brand_Summary')
+                                bs.to_excel(excel_writer=w, sheet_name='Brand_Summary')
                         except: pass
                     st.download_button(
                         "📥 Current Results (Excel+Summaries)",
